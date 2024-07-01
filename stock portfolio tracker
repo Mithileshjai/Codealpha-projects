@@ -1,0 +1,71 @@
+
+class StockPortfolio:
+    def __init__(self):
+        self.portfolio = {}
+
+    def add_stock(self, ticker, shares):
+        if ticker in self.portfolio:
+            self.portfolio[ticker] += shares
+        else:
+            self.portfolio[ticker] = shares
+        print(f"Added {shares} shares of {ticker}")
+
+    def remove_stock(self, ticker, shares):
+        if ticker in self.portfolio:
+            if self.portfolio[ticker] > shares:
+                self.portfolio[ticker] -= shares
+                print(f"Removed {shares} shares of {ticker}")
+            elif self.portfolio[ticker] == shares:
+                del self.portfolio[ticker]
+                print(f"Removed {shares} shares of {ticker}")
+            else:
+                print("Not enough shares to remove")
+        else:
+            print(f"No shares of {ticker} in portfolio")
+
+    def get_portfolio(self):
+        return self.portfolio
+
+    def track_performance(self):
+        total_value = 0
+        for ticker, shares in self.portfolio.items():
+            stock = yf.Ticker(ticker)
+            price = stock.history(period='1d')['Close'][0]
+            value = price * shares
+            total_value += value
+            print(f"{ticker}: {shares} shares @ ${price:.2f} = ${value:.2f}")
+        print(f"Total portfolio value: ${total_value:.2f}")
+
+def main():
+    portfolio = StockPortfolio()
+    while True:
+        print("\nStock Portfolio Tracker")
+        print("1. Add Stock")
+        print("2. Remove Stock")
+        print("3. View Portfolio")
+        print("4. Track Performance")
+        print("5. Exit")
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            ticker = input("Enter stock ticker: ").upper()
+            shares = int(input("Enter number of shares: "))
+            portfolio.add_stock(ticker, shares)
+        elif choice == '2':
+            ticker = input("Enter stock ticker: ").upper()
+            shares = int(input("Enter number of shares: "))
+            portfolio.remove_stock(ticker, shares)
+        elif choice == '3':
+            print("Current Portfolio:")
+            for ticker, shares in portfolio.get_portfolio().items():
+                print(f"{ticker}: {shares} shares")
+        elif choice == '4':
+            portfolio.track_performance()
+        elif choice == '5':
+            print("Exiting Stock Portfolio Tracker. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
