@@ -92,8 +92,7 @@ def get_difficulty():
         else:
             print("Invalid choice. Please choose 'easy', 'medium', or 'hard'.")
 
-def hangman():
-    print("Welcome to Hangman!")
+def play_hangman():
     difficulty = get_difficulty()
     word = select_random_word(difficulty)
     guessed_letters = set()
@@ -125,6 +124,15 @@ def hangman():
     else:
         print(hangman_stages[incorrect_guesses])
         print(f"\nGame over! You've run out of guesses. The word was: {word}")
+
+def hangman():
+    print("Welcome to Hangman!")
+    while True:
+        play_hangman()
+        restart = input("\nDo you want to play again? (yes/no): ").lower()
+        if restart != "yes":
+            print("Thanks for playing Hangman! Goodbye!")
+            break
 
 if __name__ == "__main__":
     hangman()
