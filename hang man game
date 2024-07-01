@@ -1,0 +1,130 @@
+import random
+
+# Predefined list of words for different difficulty levels
+words_easy = ["cat", "dog", "fish", "bird", "tree"]
+words_medium = ["python", "hangman", "challenge", "programming", "random"]
+words_hard = ["abracadabra", "inconsequential", "subterranean", "extraordinary", "juxtaposition"]
+
+# ASCII Art for Hangman stages
+hangman_stages = [
+    """
+       -----
+       |   |
+           |
+           |
+           |
+           |
+    ---------
+    """,
+    """
+       -----
+       |   |
+       O   |
+           |
+           |
+           |
+    ---------
+    """,
+    """
+       -----
+       |   |
+       O   |
+       |   |
+           |
+           |
+    ---------
+    """,
+    """
+       -----
+       |   |
+       O   |
+      /|   |
+           |
+           |
+    ---------
+    """,
+    """
+       -----
+       |   |
+       O   |
+      /|\\  |
+           |
+           |
+    ---------
+    """,
+    """
+       -----
+       |   |
+       O   |
+      /|\\  |
+      /    |
+           |
+    ---------
+    """,
+    """
+       -----
+       |   |
+       O   |
+      /|\\  |
+      / \\  |
+           |
+    ---------
+    """
+]
+
+def select_random_word(difficulty):
+    if difficulty == "easy":
+        words = words_easy
+    elif difficulty == "medium":
+        words = words_medium
+    else:
+        words = words_hard
+    return random.choice(words)
+
+def display_word(word, guessed_letters):
+    return " ".join([letter if letter in guessed_letters else "_" for letter in word])
+
+def get_difficulty():
+    while True:
+        difficulty = input("Select difficulty (easy, medium, hard): ").lower()
+        if difficulty in ["easy", "medium", "hard"]:
+            return difficulty
+        else:
+            print("Invalid choice. Please choose 'easy', 'medium', or 'hard'.")
+
+def hangman():
+    print("Welcome to Hangman!")
+    difficulty = get_difficulty()
+    word = select_random_word(difficulty)
+    guessed_letters = set()
+    incorrect_guesses = 0
+    max_incorrect_guesses = len(hangman_stages) - 1
+
+    while incorrect_guesses < max_incorrect_guesses:
+        print(hangman_stages[incorrect_guesses])
+        print(f"\nCurrent word: {display_word(word, guessed_letters)}")
+        print(f"Incorrect guesses left: {max_incorrect_guesses - incorrect_guesses}")
+        print(f"Guessed letters: {', '.join(sorted(guessed_letters))}")
+        
+        guess = input("Guess a letter: ").lower()
+        
+        if guess in guessed_letters:
+            print("You have already guessed that letter. Try again.")
+        elif guess in word:
+            guessed_letters.add(guess)
+            print(f"Good guess! The letter '{guess}' is in the word.")
+        else:
+            guessed_letters.add(guess)
+            incorrect_guesses += 1
+            print(f"Sorry, the letter '{guess}' is not in the word.")
+        
+        if all(letter in guessed_letters for letter in word):
+            print(hangman_stages[incorrect_guesses])
+            print(f"\nCongratulations! You guessed the word: {word}")
+            break
+    else:
+        print(hangman_stages[incorrect_guesses])
+        print(f"\nGame over! You've run out of guesses. The word was: {word}")
+
+if __name__ == "__main__":
+    hangman()
